@@ -20,6 +20,10 @@ jobs:
         run: |
           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
           echo "POSTGRES_URI=${{ secrets.SUPABASE_URI }}" >> .env
+          # 파일 내용 로그 출력 (보안상 주의 필요!)
+          echo "=== .env 파일 내용 확인 ==="
+          ls -al
+          echo "============================"
 
       - name: 빌드 (ARM64용)
         run: |

@@ -1,1 +1,17 @@
-#
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ master ] # 메인 브랜치에 푸시할 때만 실행
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: Go 설치
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'

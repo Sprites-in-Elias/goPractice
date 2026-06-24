@@ -11,28 +11,45 @@ import (
 	"time"
 	"github.com/jackc/pgx/v5"
 	"net/http"
-	// "encoding/json"
-	"fmt"
+	"encoding/json"
+	// "fmt"
 )
-type Response struct {
-	Message string `json:"message"`
+
+// 1. 하위 데이터 구조체 정의
+type User struct {
+    ID    int    `json:"id"`
+    Name  string `json:"name"`
+    Email string `json:"email"`
+}
+
+// 2. 전체 응답 구조체 정의 (중첩 구조체 사용)
+type APIResponse struct {
+    Status  string `json:"status"`
+    Code    int    `json:"code"`
+    Data    []User `json:"data"` // 여러 명의 사용자를 담을 배열(슬라이스)
+    Message string `json:"message"`
 }
 
 func helloHandler(w http.ResponseWriter, r *http.Request) {
-	/*
-	// 1. 데이터 준비
-	resp := Response{Message: "Hello, World!"}
+    // 1. 데이터 준비 (더 풍성한 데이터)
+    users := []User{
+        {ID: 1, Name: "철수", Email: "chulsu@example.com"},
+        {ID: 2, Name: "영희", Email: "younghee@example.com"},
+    }
 
-	// 2. 헤더 설정 (JSON 리턴임을 알림)
-	w.Header().Set("Content-Type", "application/json")
-	
-	// 3. 상태 코드 설정 (성공 시 200 OK)
-	w.WriteHeader(http.StatusOK)
+    resp := APIResponse{
+        Status:  "success",
+        Code:    200,
+        Data:    users,
+        Message: "사용자 목록을 성공적으로 불러왔습니다.",
+    }
 
-	// 4. JSON으로 인코딩하여 리턴
-	json.NewEncoder(w).Encode(resp)
-	*/
-	fmt.Fprint(w, "Hello, World!")
+    // 2. 헤더 설정
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+
+    // 3. JSON 인코딩
+    json.NewEncoder(w).Encode(resp)
 }
 
 func main() {

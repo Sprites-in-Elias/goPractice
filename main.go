@@ -10,10 +10,36 @@ import (
 	"os"
 	"time"
 	"github.com/jackc/pgx/v5"
+	"net/http"
+	// "encoding/json"
+	"fmt"
 )
+type Response struct {
+	Message string `json:"message"`
+}
+
+func helloHandler(w http.ResponseWriter, r *http.Request) {
+	/*
+	// 1. 데이터 준비
+	resp := Response{Message: "Hello, World!"}
+
+	// 2. 헤더 설정 (JSON 리턴임을 알림)
+	w.Header().Set("Content-Type", "application/json")
+	
+	// 3. 상태 코드 설정 (성공 시 200 OK)
+	w.WriteHeader(http.StatusOK)
+
+	// 4. JSON으로 인코딩하여 리턴
+	json.NewEncoder(w).Encode(resp)
+	*/
+	fmt.Fprint(w, "Hello, World!")
+}
 
 func main() {
 	log.Println("서버 시작!")
+
+	http.HandleFunc("/hello", helloHandler)
+	http.ListenAndServe(":8080", nil)
 
 	// 1. .env 로드 시도
 	err := godotenv.Load()

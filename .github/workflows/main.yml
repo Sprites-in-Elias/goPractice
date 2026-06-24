@@ -37,7 +37,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            echo "프로세스 종료 시도"
             sudo pkill -f ./server || true
             sleep 2
+            echo "권한 부여 시도"
             chmod +x /home/ubuntu/practice/binaryFiles/server
+            echo "서버 실행 시도"
             nohup /home/ubuntu/practice/binaryFiles/server > /home/ubuntu/practice/binaryFiles/server.log 2>&1 &

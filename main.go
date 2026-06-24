@@ -32,7 +32,7 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 	// 4. JSON으로 인코딩하여 리턴
 	json.NewEncoder(w).Encode(resp)
 	*/
-	fmt.Fprint(w, "Hello,33 World!")
+	fmt.Fprint(w, "Hello,44 World!")
 }
 
 func main() {

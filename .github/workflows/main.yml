@@ -37,10 +37,14 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            APP_NAME="test-server"
+            PID=$(pgrep -f $APP_NAME)
             echo "프로세스 종료 시도"
-            sudo pkill -f test-server || true
-            # ps -ef | grep test-server
-            sleep 2
+            if [ -n "$PID" ]; then
+              echo "기존 서버(PID: $PID) 종료 중..."
+              kill -15 $PID
+              sleep 2
+            fi
             echo "권한 부여 시도 중..."
             chmod +x /home/ubuntu/practice/binaryFiles/test-server
             echo "성공"

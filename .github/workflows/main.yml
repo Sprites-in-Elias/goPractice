@@ -28,7 +28,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "test-server"
-          target: "/home/ubuntu/practice/binaryFiles/"
+          target: "/home/ubuntu/practice/binaryFiles/test/"
 
       - name: 실행 권한 부여 및 실행
         uses: appleboy/ssh-action@master
@@ -37,17 +37,4 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            APP_NAME="test-server"
-            PID=$(pgrep -f $APP_NAME)
-            echo "프로세스 종료 시도"
-            if [ -n "$PID" ]; then
-              echo "기존 서버(PID: $PID) 종료 중..."
-              kill -15 $PID
-              sleep 2
-            fi
-            echo "권한 부여 시도 중..."
-            chmod +x /home/ubuntu/practice/binaryFiles/test-server
-            echo "성공"
-            # echo "서버 실행 시도 중..."
-            # nohup /home/ubuntu/practice/binaryFiles/test-server > /home/ubuntu/practice/binaryFiles/test-server.log 2>&1 &
-            # echo "성공"
+            /home/ubuntu/practice/binaryFiles/test/start.sh

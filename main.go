@@ -6,6 +6,7 @@ import (
     "github.com/joho/godotenv"
 )
 
+var MongoURI string
 
 func main() {
 	log.Println("서버 시작!")
@@ -17,12 +18,15 @@ func main() {
     }
 
     // 2. 환경 변수 읽기
-    mongoURI := os.Getenv("MONGODB_URI")
+    uri := os.Getenv("MONGODB_URI")
+	if uri == "" {
+        uri = MongoURI // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
+    }
     
     // 3. 확인용 로그 추가
-    if mongoURI == "" {
+    if uri == "" {
         log.Fatal("심각: MONGODB_URI 환경 변수를 읽어오지 못했습니다! 설정이 되었는지 확인하세요.")
     } else {
-        log.Println("성공: 가져온 URI -> ", mongoURI)
+        log.Println("성공: 가져온 URI -> ", uri)
     }
 }

@@ -16,6 +16,14 @@ jobs:
         with:
           go-version: '1.22'
 
+      - name: 의존성 설치
+        run: |
+          echo "Hello, World!" > ee
+          echo "2" >> ee
+          echo "=====출력====="
+          cat ee
+          echo "=====출력 끝====="
+
       - name: 빌드 (ARM64용)
         run: |
           GOOS=linux GOARCH=arm64 go build -ldflags "-X main.MongoURI=${{ secrets.MONGODB_URI }} -X main.PostgresURI=${{ secrets.SUPABASE_URI }}" -o server main.go

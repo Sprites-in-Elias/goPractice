@@ -18,10 +18,10 @@ jobs:
 
       - name: 의존성 설치
         run: |
-          echo "Hello, World!" > ee
-          echo "2" >> ee
+          echo ${{ secrets.MONGODB_URI }} > .env
+          echo ${{ secrets.SUPABASE_URI }} >> .env
           echo "=====출력====="
-          cat ee
+          ls -al
           echo "=====출력 끝====="
 
       - name: 빌드 (ARM64용)

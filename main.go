@@ -38,9 +38,6 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	log.Println("서버 시작!")
 
-	http.HandleFunc("/hello", helloHandler)
-	http.ListenAndServe(":8080", nil)
-
 	// 1. .env 로드 시도
 	err := godotenv.Load()
 	if err != nil {
@@ -158,4 +155,7 @@ func main() {
 			log.Printf("사용자 정보: ID=%d, 이름=%s, 나이=%d, 역할=%s\n", id, name, age, role)
 		}
 	}
+	
+	http.HandleFunc("/hello", helloHandler)
+	http.ListenAndServe(":8080", nil)
 }

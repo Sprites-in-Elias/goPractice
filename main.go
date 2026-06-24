@@ -13,7 +13,7 @@ import (
 )
 
 var MongoURI string
-var PostgresURL string
+var PostgresURI string
 
 func main() {
 	log.Println("서버 시작!")
@@ -29,9 +29,9 @@ func main() {
 	if m_uri == "" {
 		m_uri = MongoURI // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
 	}
-	p_uri := os.Getenv("POSTGRES_URL")
+	p_uri := os.Getenv("POSTGRES_URI")
 	if p_uri == "" {
-		p_uri = PostgresURL // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
+		p_uri = PostgresURI // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
 	}
 
 	// 3. 확인용 로그 추가

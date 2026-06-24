@@ -28,3 +28,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "server"
           target: "/home/ubuntu/practice/binaryFiles/"
+
+      - name: 실행 권한 부여
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            chmod +x /home/ubuntu/practice/binaryFiles/server

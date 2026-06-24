@@ -16,9 +16,14 @@ jobs:
         with:
           go-version: '1.22'
 
+      - name: 환경 설정 파일(.env) 생성
+        run: |
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" > .env
+          echo "POSTGRES_URI=${{ secrets.SUPABASE_URI }}" >> .env
+
       - name: 빌드 (ARM64용)
         run: |
-          GOOS=linux GOARCH=arm64 go build -ldflags "-X main.MongoURI=${{ secrets.MONGODB_URI }}" -o server main.go
+          GOOS=linux GOARCH=arm64 go build -o server main.go
 
       - name: 서버로 전송 및 권한 부여
         uses: appleboy/scp-action@master

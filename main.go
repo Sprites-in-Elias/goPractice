@@ -9,9 +9,11 @@ import (
 	"log"
 	"os"
 	"time"
+	"github.com/jackc/pgx/v5"
 )
 
 var MongoURI string
+var PostgresURL string
 
 func main() {
 	log.Println("서버 시작!")
@@ -23,22 +25,26 @@ func main() {
 	}
 
 	// 2. 환경 변수 읽기
-	uri := os.Getenv("MONGODB_URI")
-	if uri == "" {
-		uri = MongoURI // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
+	m_uri := os.Getenv("MONGODB_URI")
+	if m_uri == "" {
+		m_uri = MongoURI // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
+	}
+	p_uri := os.Getenv("POSTGRES_URL")
+	if p_uri == "" {
+		p_uri = PostgresURL // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
 	}
 
 	// 3. 확인용 로그 추가
-	if uri == "" {
+	if m_uri == "" {
 		log.Fatal("심각: MONGODB_URI 환경 변수를 읽어오지 못했습니다! 설정이 되었는지 확인하세요.")
 	} else {
-		log.Println("성공: 가져온 URI -> ", uri)
+		log.Println("성공: 가져온 URI -> ", m_uri)
 
 		// 3. MongoDB 연결 설정
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		clientOptions := options.Client().ApplyURI(uri)
+		clientOptions := options.Client().ApplyURI(m_uri)
 		client, err := mongo.Connect(ctx, clientOptions)
 		if err != nil {
 			log.Fatal("연결 객체 생성 실패:", err)
@@ -79,7 +85,7 @@ func main() {
 			log.Println("가져온 데이터:", result)
 			log.Println("_id 필드값:", result["_id"])
 		}
-		
+
 		// 6. 모든 데이터 가져오기 (필터에 nil을 넣으면 전부 다!)
 		cursor, err := collection.Find(context.Background(), bson.D{})
 		if err != nil {
@@ -102,5 +108,37 @@ func main() {
 			log.Fatal("커서 에러:", err)
 		}
 		log.Println("--- 전체 데이터 출력 끝 ---")
+	}
+	if p_uri == "" {
+		log.Fatal("심각: POSTGRES_URL 환경 변수를 읽어오지 못했습니다! 설정이 되었는지 확인하세요.")
+	} else {
+		log.Println("성공: 가져온 URI -> ", p_uri)
+
+		conn, err := pgx.Connect(context.Background(), p_uri)
+		
+		if err != nil {
+			log.Fatal("연결 실패:", err)
+		}
+		defer conn.Close(context.Background())
+		log.Println("연결 성공!!")
+		// 1. 쿼리 실행
+		rows, err := conn.Query(context.Background(), "SELECT id, name, age, role FROM test")
+		if err != nil {
+			log.Fatal("조회 실패:", err)
+		}
+		defer rows.Close()
+
+		// 2. 데이터 순회하며 출력
+		for rows.Next() {
+			var id int
+			var name string
+			var age int
+			var role string
+			err := rows.Scan(&id, &name, &age, &role)
+			if err != nil {
+				log.Fatal(err)
+			}
+			log.Printf("사용자 정보: ID=%d, 이름=%s, 나이=%d, 역할=%s\n", id, name, age, role)
+		}
 	}
 }

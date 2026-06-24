@@ -12,9 +12,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var MongoURI string
-var PostgresURI string
-
 func main() {
 	log.Println("서버 시작!")
 
@@ -26,13 +23,7 @@ func main() {
 
 	// 2. 환경 변수 읽기
 	m_uri := os.Getenv("MONGODB_URI")
-	if m_uri == "" {
-		m_uri = MongoURI // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
-	}
 	p_uri := os.Getenv("POSTGRES_URI")
-	if p_uri == "" {
-		p_uri = PostgresURI // 환경 변수가 없으면 빌드 때 박아넣은 값을 씀
-	}
 
 	// 3. 확인용 로그 추가
 	if m_uri == "" {

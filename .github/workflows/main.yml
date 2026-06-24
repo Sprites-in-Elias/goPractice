@@ -17,6 +17,9 @@ jobs:
           go-version: '1.22'
 
       - name: 빌드 (ARM64용)
+        env:
+          # 여기서 깃허브 설정에 저장한 Secret 값을 환경 변수로 주입해!
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
           GOOS=linux GOARCH=arm64 go build -o server main.go
 

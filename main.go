@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+    "log"
+	"os"
+    "github.com/joho/godotenv"
+)
+
 
 func main() {
-    fmt.Println("서버 준비 완료 했음!!!")
+    log.Println("서버 준비 완료 했음!!!")
+    _ = godotenv.Load()
+	mongoURI := os.Getenv("MONGODB_URI")
+	log.Println(mongoURI)
 }

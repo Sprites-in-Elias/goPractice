@@ -38,19 +38,3 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             /home/ubuntu/practice/binaryFiles/test/start.sh
-            # cd /home/ubuntu/practice/binaryFiles/test
-            # APP_NAME="test-server"
-            # PID=$(pgrep -f $APP_NAME)
-            # echo "프로세스 종료 시도 중..."
-            # if [ -n "$PID" ]; then
-            #     echo "기존 서버(PID: $PID) 종료 중..."
-            #     kill -15 $PID
-            #     sleep 2
-            #     echo "성공"
-            # fi
-            # echo "권한 부여 시도 중..."
-            # chmod +x ./test-server
-            # echo "성공"
-            # echo "서버 실행 시도 중..."
-            # nohup ./test-server > ./test-server.log 2>&1 &
-            # echo "성공"

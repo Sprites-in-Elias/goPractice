@@ -1,0 +1,29 @@
+# Go 관련
+# Go 빌드 시 생성되는 실행 파일들
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go 모듈 관련 (필요하다면 주석 해제)
+# vendor/
+
+# 환경 변수 파일 (가장 중요!)
+.env
+.env.local
+
+# IDE 설정 (VS Code 등)
+.vscode/
+.idea/
+.DS_Store
+
+# OS 관련
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 기타
+*.log

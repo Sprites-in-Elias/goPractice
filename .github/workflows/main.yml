@@ -21,6 +21,7 @@ jobs:
           # 여기서 깃허브 설정에 저장한 Secret 값을 환경 변수로 주입해!
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
         run: |
+          echo "MONGODB_URI: $MONGODB_URI"
           GOOS=linux GOARCH=arm64 go build -o server main.go
 
       - name: 서버로 전송 및 권한 부여

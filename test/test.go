@@ -99,7 +99,6 @@ func MongoListTest(w http.ResponseWriter, r *http.Request) {
 		log.Println("커서 에러:", err)
 		ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("커서 에러: %v", err))
 	} else {
-		log.Println("성공")
 		ResponseSuccess(w, "success", 200, userList, "사용자 목록을 성공적으로 불러왔습니다.")
 	}
 }

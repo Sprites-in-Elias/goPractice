@@ -3,6 +3,7 @@ package liveKit
 import (
 	"os"
 	"log"
+	"fmt"
 	
 	"github.com/joho/godotenv"
 	"github.com/livekit/protocol/auth"
@@ -33,5 +34,10 @@ func generateToken(roomName string, identity string) (string, error) {
 }
 
 func TestRoomToken(w http.ResponseWriter, r *http.Request) {
-	network.ResponseSuccess(w, "success", 200, map[string]string{"token": "token"}, "테스트 방 토큰이 성공적으로 생성되었습니다.")
+	testToken, err := generateToken("testRoom", "testUser")
+	if err != nil {
+		network.ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("토큰 생성 실패: %v", err))
+		return
+	}
+	network.ResponseSuccess(w, "success", 200, map[string]string{"token": testToken}, "테스트 방 토큰이 성공적으로 생성되었습니다.")
 }

@@ -6,10 +6,10 @@ import (
 	"time"
 	"fmt"
 	"net/http"
-	"encoding/json"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
 	"goPractice/db"
+	"goPractice/network"
 )
 
 // 1. 하위 데이터 구조체 정의
@@ -20,13 +20,7 @@ type User struct {
 	Role  string `json:"role"`
 }
 
-// 2. 전체 응답 구조체 정의 (중첩 구조체 사용)
-type APIResponse struct {
-    Status  string `json:"status"`
-    Code    int    `json:"code"`
-    Data    any `json:"data"` // 여러 명의 사용자를 담을 배열(슬라이스)
-    Message string `json:"message"`
-}
+
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "헬로!!, World!")
@@ -34,18 +28,6 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 
 func GetDummyNumber(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "33")
-}
-
-func ResponseSuccess(w http.ResponseWriter, status string, code int, data any, message string) {
-	resp := APIResponse{
-		Status:  status,
-		Code:    code,
-		Data:    data,
-		Message: message,
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(resp)
 }
 
 func MongoOneTest(w http.ResponseWriter, r *http.Request) {
@@ -59,16 +41,16 @@ func MongoOneTest(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			log.Println("조회 결과: 데이터가 없습니다.")
-			ResponseSuccess(w, "error", 404, nil, "데이터가 없습니다.")
+			network.ResponseSuccess(w, "error", 404, nil, "데이터가 없습니다.")
 		} else {
 			log.Println("조회 에러:", err)
-			ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("조회 에러: %v", err))
+			network.ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("조회 에러: %v", err))
 		}
 	} else {
 		users := []User{
 			{ID: 1, Name: result["name"].(string), Age: result["age"].(int32), Role: result["role"].(string)},
 		}
-		ResponseSuccess(w, "success", 200, users, "사용자 정보를 성공적으로 불러왔습니다.")
+		network.ResponseSuccess(w, "success", 200, users, "사용자 정보를 성공적으로 불러왔습니다.")
 	}
 }
 
@@ -76,7 +58,7 @@ func MongoListTest(w http.ResponseWriter, r *http.Request) {
 	collection := db.MongoClient.Database("testDatabaseName").Collection("testCollectionName")
 	cursor, err := collection.Find(context.Background(), bson.D{})
 	if err != nil {
-		ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("조회 실패: %v", err))
+		network.ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("조회 실패: %v", err))
 		return
 	}
 	defer cursor.Close(context.Background())
@@ -87,7 +69,7 @@ func MongoListTest(w http.ResponseWriter, r *http.Request) {
 		var result bson.M
 		err := cursor.Decode(&result)
 		if err != nil {
-			ResponseSuccess(w, "error", 500, nil, err.Error())
+			network.ResponseSuccess(w, "error", 500, nil, err.Error())
 			return
 		}
 		userList = append(userList, User{
@@ -101,9 +83,9 @@ func MongoListTest(w http.ResponseWriter, r *http.Request) {
 	// 커서 순회 중 에러가 발생했는지 확인
 	if err := cursor.Err(); err != nil {
 		log.Println("커서 에러:", err)
-		ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("커서 에러: %v", err))
+		network.ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("커서 에러: %v", err))
 	} else {
-		ResponseSuccess(w, "success", 200, userList, "사용자 목록을 성공적으로 불러왔습니다.")
+		network.ResponseSuccess(w, "success", 200, userList, "사용자 목록을 성공적으로 불러왔습니다.")
 	}
 }
 
@@ -132,5 +114,5 @@ func PgTest(w http.ResponseWriter, r *http.Request) {
 			Role: role,
 		})
 	}
-	ResponseSuccess(w, "success", 200, userList, "사용자 목록을 성공적으로 불러왔습니다.")
+	network.ResponseSuccess(w, "success", 200, userList, "사용자 목록을 성공적으로 불러왔습니다.")
 }

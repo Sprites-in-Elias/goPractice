@@ -10,6 +10,7 @@ func NewRouter() *chi.Mux {
 
     r.Route("/test", func(r chi.Router) {
 		r.Get("/hello", test.HelloHandler)	
+		r.Get("/dummyNumber", test.GetDummyNumber)
     })
     
 	r.Get("/mOneTest", test.MongoOneTest)

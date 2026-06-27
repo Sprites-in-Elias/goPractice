@@ -32,6 +32,10 @@ func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "헬로3333, World!")
 }
 
+func GetDummyNumber(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "33")
+}
+
 func ResponseSuccess(w http.ResponseWriter, status string, code int, data any, message string) {
 	resp := APIResponse{
 		Status:  status,

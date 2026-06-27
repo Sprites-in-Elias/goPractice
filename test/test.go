@@ -29,7 +29,7 @@ type APIResponse struct {
 }
 
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "헬로3333, World!")
+	fmt.Fprintf(w, "헬로!!, World!")
 }
 
 func GetDummyNumber(w http.ResponseWriter, r *http.Request) {

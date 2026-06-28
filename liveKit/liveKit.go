@@ -34,7 +34,8 @@ func generateToken(roomName string, identity string) (string, error) {
 }
 
 func TestRoomToken(w http.ResponseWriter, r *http.Request) {
-	testToken, err := generateToken("testRoom", "testUser")
+	testUser := fmt.Sprintf("testUser_%d", time.Now().UnixNano())
+	testToken, err := generateToken("testRoom", testUser)
 	if err != nil {
 		network.ResponseSuccess(w, "error", 500, nil, fmt.Sprintf("토큰 생성 실패: %v", err))
 		return
